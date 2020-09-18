@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "tails",
+  "version": "${version}",
+
+  "name": "Tails",
+  "description": "Rewrite of Tails for Fabric.",
+  "authors": [
+    "quaternary",
+    "Kihara",
+    "TTFTCUTS",
+    "RiskyKen"
+  ],
+
+  "license": "MIT",
+  "icon": "assets/tails/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "agency.highlysuspect.tails.Init"
+    ],
+    "client": [
+      "agency.highlysuspect.tails.client.ClientInit"
+    ]
+  },
+  "mixins": [
+    "tails.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "eggplant": "*"
+  }
+}
