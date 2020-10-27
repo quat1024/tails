@@ -18,12 +18,12 @@ public abstract class PartRenderer<CFG extends PartConfig> {
 	protected final PartConfig config;
 	
 	//TODO: What is the proper API here, what pieces do I need in order to render.
-	public void transformAndRender(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, PlayerEntityModel<AbstractClientPlayerEntity> playerModel) {
+	public void transformAndRender(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, AbstractClientPlayerEntity player, PlayerEntityModel<AbstractClientPlayerEntity> playerModel) {
 		matrices.push();
 		config.mountPoint.apply(matrices, playerModel);
-		renderPart(matrices, vertexConsumers, light, player, playerModel);
+		renderPart(matrices, vertexConsumers, light, overlay, player, playerModel);
 		matrices.pop();
 	}
 	
-	public abstract void renderPart(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, PlayerEntityModel<AbstractClientPlayerEntity> playerModel);
+	public abstract void renderPart(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, AbstractClientPlayerEntity player, PlayerEntityModel<AbstractClientPlayerEntity> playerModel);
 }
