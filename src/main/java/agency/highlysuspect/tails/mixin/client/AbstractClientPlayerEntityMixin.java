@@ -1,35 +1,43 @@
 package agency.highlysuspect.tails.mixin.client;
 
+import agency.highlysuspect.tails.client.ClientInit;
 import agency.highlysuspect.tails.client.feature.OutfitRenderer;
+import agency.highlysuspect.tails.client.outfit.MountPoint;
 import agency.highlysuspect.tails.client.outfit.Outfit;
 import agency.highlysuspect.tails.util.AbstractClientPlayerEntityExt;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 
-import java.util.Optional;
+import java.util.Collections;
 
 @Mixin(AbstractClientPlayerEntity.class)
 public class AbstractClientPlayerEntityMixin implements AbstractClientPlayerEntityExt {
-	private OutfitRenderer tails$outfitRenderer;
-	private int tails$cachedOutfitHash = 0;
+	private Outfit tails$outfit = Outfit.EMPTY;
+	private OutfitRenderer tails$outfitRenderer = OutfitRenderer.EMPTY;
 	
 	@Override
-	public Optional<OutfitRenderer> tails$getOutfitRenderer() {
-		Optional<Outfit> maybeOutfit = Outfit.forPlayer((PlayerEntity) (Object) this);
-		if(!maybeOutfit.isPresent()) {
-			tails$outfitRenderer = null;
-			tails$cachedOutfitHash = 0;
-			return Optional.empty();
+	public Outfit tails$getOutfit() {
+		//todo TEST
+		// Reference equality is intentional
+		if(tails$outfit == Outfit.EMPTY) {
+			tails$outfit = Outfit.createTestOutfit();
 		}
 		
-		Outfit outfit = maybeOutfit.get();
-		int outfitHash = outfit.hashCode();
-		if(tails$cachedOutfitHash != outfitHash || tails$outfitRenderer == null) {
-			tails$cachedOutfitHash = outfitHash;
-			tails$outfitRenderer = OutfitRenderer.fromOutfit(outfit);
+		return tails$outfit;
+	}
+	
+	@Override
+	public void tails$setOutfit(Outfit outfit) {
+		tails$outfit = outfit;
+	}
+	
+	@Override
+	public OutfitRenderer tails$getOutfitRenderer() {
+		//Reference equality is intentional
+		if(tails$outfitRenderer.getOutfit() != tails$getOutfit()) {
+			tails$outfitRenderer = new OutfitRenderer(tails$outfit);
 		}
 		
-		return Optional.of(tails$outfitRenderer);
+		return tails$outfitRenderer;
 	}
 }

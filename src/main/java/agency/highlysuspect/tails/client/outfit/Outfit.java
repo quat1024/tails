@@ -1,34 +1,32 @@
 package agency.highlysuspect.tails.client.outfit;
 
 import agency.highlysuspect.tails.client.ClientInit;
+import agency.highlysuspect.tails.util.AbstractClientPlayerEntityExt;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.player.PlayerEntity;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 public class Outfit {
-	public static Outfit empty() {
-		return Outfit.ofParts(Collections.emptyList());
+	public static final Outfit EMPTY = new Outfit(Collections.emptyList());
+	
+	public Outfit(Collection<ConfiguredPart<?>> parts) {
+		this.parts = ImmutableList.copyOf(parts);
 	}
 	
-	public static Optional<Outfit> forPlayer(PlayerEntity player) {
-		//TODO actually check something about the player
-		// Maybe have a field mixed on to PlayerEntity
-		// For now this is recreated every call intentionally, to allow hot-reloading it
-		
-		ConfiguredPart<PartConfig.AltSwitch> xd = ClientInit.TEST.create(c -> c.mountPoint = MountPoint.byName("tail"));
-		return Optional.of(Outfit.ofParts(Collections.singleton(xd)));
+	private final ImmutableList<ConfiguredPart<?>> parts;
+	
+	public static Outfit forPlayer(PlayerEntity player) {
+		return ((AbstractClientPlayerEntityExt) player).tails$getOutfit();
 	}
 	
-	public static Outfit ofParts(Collection<ConfiguredPart<?>> parts) {
-		Outfit o = new Outfit();
-		o.parts.addAll(parts);
-		return o;
+	public static Outfit createTestOutfit() {
+		return new Outfit(Collections.singleton(ClientInit.TEST_PART_TYPE.create(c -> c.mountPoint = MountPoint.byName("tail"))));
 	}
 	
-	private final List<ConfiguredPart<?>> parts = new ArrayList<>();
-	
-	public List<ConfiguredPart<?>> getParts() {
+	public ImmutableList<ConfiguredPart<?>> getParts() {
 		return parts;
 	}
 	
@@ -37,10 +35,17 @@ public class Outfit {
 	}
 	
 	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
+		
+		Outfit outfit = (Outfit) o;
+		
+		return parts.equals(outfit.parts);
+	}
+	
+	@Override
 	public int hashCode() {
-		//In lieu of a dirty flag to rebuild outfit renderers for each player, I just cache the hash value and rebuild it when the hashes differ.
-		//Premature optimization? Yeah, probably. I don't know if it's even faster.
-		//TODO: profile this.
 		return parts.hashCode();
 	}
 }

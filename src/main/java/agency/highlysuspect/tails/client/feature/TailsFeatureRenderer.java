@@ -16,10 +16,7 @@ public class TailsFeatureRenderer extends FeatureRenderer<AbstractClientPlayerEn
 	public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
 		PlayerEntityModel<AbstractClientPlayerEntity> playerModel = getContextModel();
 		
-		OutfitRenderer.forPlayer(player).ifPresent(renderer ->
-			renderer.forEachPartRenderer(partRenderer -> 
-				partRenderer.transformAndRender(matrices, vertexConsumers, light, player, playerModel)
-			)
-		);
+		OutfitRenderer.forPlayer(player)
+			.forEachPartRenderer(p -> p.transformAndRender(matrices, vertexConsumers, light, player, playerModel));
 	}
 }

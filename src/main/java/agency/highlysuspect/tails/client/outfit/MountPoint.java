@@ -7,16 +7,19 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 //TODO: client server separation, maybe? does it make sense here?
 
-//A mount point defines a transformation to some point along the player model.
-//After following a mount point, you can think of all drawing as relative to a point on the player's body,
-//and not as "relative to a point in 3d space where the player happens to be standing" or whatever.
-//(i.e. you don't have to manually rotate/translate to compensate for the player sneaking)
+/**
+ * A mount point defines a transformation to some point along the player model.
+ * After following a mount point, you can think of all drawing as relative to a point on the player's body,
+ * and not as "relative to a point in 3d space where the player happens to be standing" or whatever.
+ * (i.e. you don't have to manually rotate/translate to compensate for the player sneaking)
+ */
 public abstract class MountPoint {
 	public MountPoint(String name) {
 		this.name = name;
@@ -26,6 +29,8 @@ public abstract class MountPoint {
 	
 	private static final Map<String, MountPoint> byName = new HashMap<>();
 	public static MountPoint byName(String name) {
+		if(byName.isEmpty()) populateDefaultMountPoints(); //Can't be done in a static initializer b/c StaticInitializerReferencesSubclass, apparently. Let's be safe.
+		
 		return byName.get(name);
 	}
 	
@@ -50,7 +55,7 @@ public abstract class MountPoint {
 		}
 	}
 	
-	static {
+	public static void populateDefaultMountPoints() {
 		//This giant block of code initializes 42 mount points along the player's body.
 		//With names like head_bottom, left_leg_right, etc.
 		//There's a little bit on the end that adds a "tail" point for a total of 43.

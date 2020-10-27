@@ -4,18 +4,14 @@ import agency.highlysuspect.tails.client.outfit.PartConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
-
-import java.util.Random;
 
 public class TestRenderer extends PartRenderer<PartConfig.AltSwitch> {
 	public TestRenderer(PartConfig.AltSwitch config) {
@@ -34,6 +30,9 @@ public class TestRenderer extends PartRenderer<PartConfig.AltSwitch> {
 		
 		//This works though
 		ItemRenderer pog2 = MinecraftClient.getInstance().getItemRenderer();
+		matrices.push();
+		matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(-45f));
 		pog2.renderItem(new ItemStack(Items.BREAD), ModelTransformation.Mode.FIXED, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers);
+		matrices.pop();
 	}
 }
