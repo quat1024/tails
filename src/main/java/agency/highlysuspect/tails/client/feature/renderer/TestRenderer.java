@@ -1,12 +1,9 @@
 package agency.highlysuspect.tails.client.feature.renderer;
 
+import agency.highlysuspect.tails.client.feature.PartRenderContext;
 import agency.highlysuspect.tails.client.outfit.PartConfig;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix3f;
@@ -45,20 +42,20 @@ public class TestRenderer extends PartRenderer<PartConfig.AltSwitch> {
 	private final ModelPart tailBase;
 	
 	@Override
-	public void renderPart(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, AbstractClientPlayerEntity player, PlayerEntityModel<AbstractClientPlayerEntity> playerModel) {
-		VertexConsumer v = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(new Identifier("tails", "textures/stolen/dragon_tail.png")));
-		Matrix4f model = matrices.peek().getModel();
-		Matrix3f normal = matrices.peek().getNormal();
+	public void renderPart(PartRenderContext ctx) {
+		VertexConsumer v = ctx.vertexConsumers.getBuffer(RenderLayer.getEntityCutout(new Identifier("tails", "textures/stolen/dragon_tail.png")));
+		Matrix4f model = ctx.matrices.peek().getModel();
+		Matrix3f normal = ctx.matrices.peek().getNormal();
 		
 //		matrices.push();
 //		matrices.translate(0.5f - 2/16f, 0f, 0f);
 //		playerModel.rightArm.render(matrices, v, light, overlay);
 //		matrices.pop();
 		
-		matrices.push();
-		matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-45));
-		tailBase.render(matrices, v, light, overlay);
-		matrices.pop();
+		ctx.matrices.push();
+		ctx.matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-45));
+		tailBase.render(ctx.matrices, v, ctx.light, ctx.overlay);
+		ctx.matrices.pop();
 		
 //		for(int i = 0; i < 4; i++) {
 //			float x = i;

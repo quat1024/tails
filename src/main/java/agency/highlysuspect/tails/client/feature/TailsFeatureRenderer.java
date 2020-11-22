@@ -8,14 +8,20 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TailsFeatureRenderer extends FeatureRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
 	public TailsFeatureRenderer(FeatureRendererContext<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> context) {
 		super(context);
 	}
 	
+	private static final long start = System.currentTimeMillis(); 
+	private final Map<String, Object> persistentData = new HashMap<>();
+	
 	@Override
 	public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-		//TODO uncomment; for testing
+		//TODO uncomment before release; just for testing to hide the player model
 		//if(player.isInvisible()) return;
 		
 		getTexture(player);
@@ -23,7 +29,12 @@ public class TailsFeatureRenderer extends FeatureRenderer<AbstractClientPlayerEn
 		PlayerEntityModel<AbstractClientPlayerEntity> playerModel = getContextModel();
 		int overlay = LivingEntityRenderer.getOverlay(player, 0);
 		
+		//todo uhh, idk this sucks lmao
+		float seconds = (System.currentTimeMillis() - start) / 1000f; 
+		
+		PartRenderContext partRenderContext = new PartRenderContext(matrices, vertexConsumers, light, overlay, player, playerModel, tickDelta, seconds, persistentData);
+		
 		OutfitRenderer.forPlayer(player)
-			.forEachPartRenderer(p -> p.transformAndRender(matrices, vertexConsumers, light, overlay, player, playerModel));
+			.forEachPartRenderer(p -> p.transformAndRender(partRenderContext));
 	}
 }

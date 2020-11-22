@@ -23,7 +23,7 @@ public class Outfit {
 	}
 	
 	public static Outfit createTestOutfit() {
-		return new Outfit(Collections.singleton(ClientInit.TEST_PART_TYPE.create(c -> c.mountPoint = MountPoint.byName("tail"))));
+		return new Outfit(Collections.singleton(ClientInit.TEST_PART_TYPE2.create(c -> c.mountPoint = MountPoint.byName("tail"))));
 	}
 	
 	public ImmutableList<ConfiguredPart<?>> getParts() {

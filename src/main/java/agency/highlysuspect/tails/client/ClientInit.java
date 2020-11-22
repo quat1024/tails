@@ -4,6 +4,7 @@ import agency.highlysuspect.tails.Init;
 import agency.highlysuspect.tails.client.feature.TailsFeatureRenderer;
 import agency.highlysuspect.tails.client.feature.renderer.PartRenderer;
 import agency.highlysuspect.tails.client.feature.renderer.TestRenderer;
+import agency.highlysuspect.tails.client.feature.renderer.TestRenderer2;
 import agency.highlysuspect.tails.client.outfit.PartConfig;
 import agency.highlysuspect.tails.client.outfit.PartType;
 import com.mojang.serialization.Lifecycle;
@@ -24,6 +25,7 @@ public class ClientInit implements ClientModInitializer {
 	public static final Registry<PartRenderer.Factory<?>> PART_RENDERER_REGISTRY = new SimpleRegistry<>(PART_RENDERER_REGISTRY_KEY, Lifecycle.experimental());
 	
 	public static PartType<PartConfig.AltSwitch> TEST_PART_TYPE;
+	public static PartType<PartConfig.Blank> TEST_PART_TYPE2;
 	
 	@Override
 	public void onInitializeClient() {
@@ -68,9 +70,11 @@ public class ClientInit implements ClientModInitializer {
 */
 		//Test
 		TEST_PART_TYPE = Registry.register(PART_TYPE_REGISTRY, id("test"), new PartType<>(PartConfig.AltSwitch::new));
+		TEST_PART_TYPE2 = Registry.register(PART_TYPE_REGISTRY, id("test2"), new PartType<>(PartConfig.Blank::new));
 		
 		////Renderers
 		Registry.register(PART_RENDERER_REGISTRY, id("test"), (PartRenderer.Factory<PartConfig.AltSwitch>) TestRenderer::new);
+		Registry.register(PART_RENDERER_REGISTRY, id("test2"), (PartRenderer.Factory<PartConfig.Blank>) TestRenderer2::new);
 	}
 	
 	private static Identifier id(String path) {
